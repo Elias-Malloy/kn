@@ -7,9 +7,9 @@ typedef enum CodeFormat {
 } CodeFormat;
 
 typedef struct GNU_ATNT_x86_64_Assembly {
-	char *str;
-	uint64_t cursor;
-	uint64_t capacity;
+	char *start;
+	char *cursor;
+	char *end;
 } GNU_ATNT_x86_64_Assembly;
 
 typedef union ProgramData {
@@ -21,7 +21,23 @@ typedef struct Program {
 	ProgramData data;
 } Program;
 
-typedef uint32_t Opcode;
+typedef enum Instruction {
+	INSTR_MOV,
+	INSTR_ADD,
+	INSTR_SUB,
+	INSTR_MUL,
+	INSTR_DIV,
+	INSTR_AND,
+	INSTR_OR,
+	INSTR_XOR,
+	INSTR_NOT,
+	INSTR_CALL,
+	INSTR_RET,
+	INSTR_SHR,
+	INSTR_SHL,
+	INSTR_SAR,
+} Instruction;
+
 typedef uint64_t Argument;
 
-void add_instruction(Program *program, Opcode opcode, Argument *args);
+void add_instruction(Program *program, Instruction instr, Argument *args);
