@@ -2,7 +2,7 @@
 #define EMM_LR1
 
 #include "lr_tree.h"
-#include "bit_array256.h"
+#include "bitarray.h"
 
 #ifndef NULL
 #define NULL ((void *) 0)
