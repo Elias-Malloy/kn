@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 typed_syntax_tree *typecheck(syntax_tree *tree) {
-	unsigned char type, ltype, rtype, valid_typing;
+	unsigned char type, ltype, rtype, valid_typing, operator;
 	syntax_tree *node, stmt;
 	
 	type = lr_tree_node_type(tree);
@@ -22,8 +22,8 @@ typed_syntax_tree *typecheck(syntax_tree *tree) {
 }
 
 bool typecheck_expression(syntax_tree *expr) {
-	unsigned char type, ltype;
-	typed_syntax_tree *node, ;
+	unsigned char type, ltype, valid_typing;
+	typed_syntax_tree *node, lhs, rhs;
 	data_type etype;
 	
 	ltype = expr->left->type;
@@ -38,7 +38,7 @@ bool typecheck_expression(syntax_tree *expr) {
 			break;
 		// unary pre
 		case TERMINAL_INC:
-		
+			
 			node = lr_tree_node_create(EXPR_ADD, 
 		case TERMINAL_DEC:
 		
@@ -57,8 +57,47 @@ bool typecheck_expression(syntax_tree *expr) {
 		case SYMBOL_CONSTANT:
 		case SYMBOL_VARIABLE:
 		
+		case SYMBOL_PARTIAL_MUL_DIV_MOD:
+		case SYMBOL_PARTIAL_ADD_SUB:
+		case SYMBOL_PARTIAL_SHIFT:
+		case SYMBOL_PARTIAL_COMPARE:
+		case SYMBOL_PARTIAL_COMPARE_EQUAL:
+		case SYMBOL_PARTIAL_BITWISE_AND:
+		case SYMBOL_PARTIAL_BITWISE_XOR:
+		case SYMBOL_PARTIAL_BITWISE_OR:
+		case SYMBOL_PARTIAL_LOGICAL_AND:
+		case SYMBOL_PARTIAL_LOGICAL_OR:
+		case SYMBOL_PARTIAL_ASSIGN:
+		case SYMBOL_PARTIAL_COMMA:
+			lhs = expr->left->left;
+			operator = expr->left->right;
+			rhs = expr->right;
+
+			valid_typing = typecheck_expression(lhs);
+			if (!valid_typing) return false;
+			valid_typing = typecheck_expression(rhs);
+			if (!valid_typing) return false;
 		
+			switch (operator) {
+				case TERMINAL_STAR: // mul
+					expr->type = EXPR_MUL;
+					goto accept_integer_or_float;
+				case TERMINAL_DIV:
+					expr->type = EXPR_DIV;
+					goto accept_integer_or_float;
+				case TERMINAL_MOD;
+					expr->type = EXPR_MOD;
+					goto accept_integer;
+				case TERMINAL_COMMA:
+					expr->type = EXPR_SEQUENCE;
+					expr->base_type = rhs->base_type;
+					return true;
+			}
+			break;
 	}
+	accept_integer_or_float:
+		if (lhs->base_type.prim_type == 
+	accept_integer:
 }
 
 bool typecheck_statement(syntax_tree *stmt) {

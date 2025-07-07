@@ -13,6 +13,7 @@
 // if re-enabled, integer constants will be evaluated
 
 #include "lr1.h"
+#include "datatype.h"
 
 static void string_to_terminals(char* str, unsigned char* terminals, unsigned long len);
 
@@ -25,13 +26,15 @@ static void lr1_disambiguate(lr_tree_node *node, lr_tree_node *root) {
     unsigned long long i, n, scale, len;
     lr_tree_node* subnode, root, auxnode; root = new arg???
 	syntax_tree_variable *var;
+	data_type *datatype;
     char identifier[MAX_IDENTIFIER_LEN];
 	
 	type = lr_tree_node_type(node);
     switch (type) {
 		case SYMBOL_DECLARATION:
 			// test for name multiple inclusion in same list
-			var = node->left; // caution no name...
+			datatype = node->left;
+			
 			
 		case SYMBOL_IDENTIFIER:
 			len = 0;
@@ -138,6 +141,14 @@ void write_grammar(void) {
 	lr1_add_production_rule(0, SYMBOL_PARTIAL_IDENTIFIER, any, SYMBOL_IDENTIFIER);
 	lr1_add_production_rule(0, SYMBOL_PARTIAL_IDENTIFIER, TERMINAL_LETTER, TERMINAL_NONE);
 	// on replacement, SYMBOL_IDENTIFIER is looked up and replaced by disambiguate
+
+	// grab the identifier early if it is the name of a struct field
+	// this way the identifier is looked up exclusively against possible field names for the type of struct
+	lr1_add_production_rule(SYMBOL_PARTIAL_INDIRECT_ACCESS, SYMBOL_PARTIAL_IDENTIFIER, any, SYMBOL_EXPRESSION);
+	lr1_add_production_rule(SYMBOL_PARTIAL_INDIRECT_ACCESS, SYMBOL_PARTIAL_IDENTIFIER, TERMINAL_LETTER, TERMINAL_NONE);
+	
+	lr1_add_production_rule(SYMBOL_PARTIAL_DIRECT_ACCESS, SYMBOL_PARTIAL_IDENTIFIER, any, SYMBOL_EXPRESSION);
+	lr1_add_production_rule(SYMBOL_PARTIAL_DIRECT_ACCESS, SYMBOL_PARTIAL_IDENTIFIER, TERMINAL_LETTER, TERMINAL_NONE);
 
 // TYPES
     // the implied word after undefined is identifier
