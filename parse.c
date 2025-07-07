@@ -18,12 +18,57 @@ static void string_to_terminals(char* str, unsigned char* terminals, unsigned lo
 
 char* src_code;
 
-static void lr1_disambiguate(lr_tree_node *node) {
-    unsigned char type, ltype;
-    unsigned long long n, scale;
-    lr_tree_node* subnode;
-    type = lr_tree_node_type(node);
+#define MAX_IDENTIFIER_LEN 256
+
+static void lr1_disambiguate(lr_tree_node *node, lr_tree_node *root) {
+    unsigned char type, ltype, *name;
+    unsigned long long i, n, scale, len;
+    lr_tree_node* subnode, root, auxnode; root = new arg???
+	syntax_tree_variable *var;
+    char identifier[MAX_IDENTIFIER_LEN];
+	
+	type = lr_tree_node_type(node);
     switch (type) {
+		case SYMBOL_DECLARATION:
+			// test for name multiple inclusion in same list
+			var = node->left; // caution no name...
+			
+		case SYMBOL_IDENTIFIER:
+			len = 0;
+			subnode = node->right;
+			do {
+				identifier[len++] = src_code[(uint64_t) subnode->right >> 9];
+				subnode = subnode->left;
+			} while (subnode);
+			identifier[len] = '\0';
+			// test if identifier is predefined keyword
+			if (strcmp(identifier, "if") == 0) {
+				// replace keyword etc
+			} else {
+				// lookup previous variable definition
+				subnode = root;
+				do {
+					type = lr_tree_node_type(subnode);
+					if (type != SYMBOL_STATEMENTS) {
+						node->type = SYMBOL_UNDEFINED_IDENTIFIER;
+						break;
+					}
+					auxnode = symbol->right->right;
+					if (auxnode == SYMBOL_DECLARATION) {
+						auxnode = auxnode->right;
+						do {
+							var = auxnode->right;
+							if (strcmp(identifier, var->name) == 0) {								
+								memcpy(node, var, sizeof(syntax_tree_variable));
+								return;
+							}
+						} while (auxnode = auxnode->left);
+					}
+					subnode = subnode->left;
+				} while (1);
+				node->type = SYMBOL_UNDEFINED_IDENTIFIER;
+			}
+			break;
         case SYMBOL_CONSTANT:
             ltype = lr_tree_node_type(node->left);
             //rtype = lr_tree_node_type(node->right);
@@ -88,6 +133,12 @@ void write_grammar(void) {
     lr1_add_production_rule(SYMBOL_STATEMENTS, SYMBOL_STATEMENT, any, SYMBOL_STATEMENTS);
 // IDENTIFIERS
 
+	lr1_add_production_rule(0, TERMINAL_LETTER, any, SYMBOL_PARTIAL_IDENTIFIER);
+	lr1_add_production_rule(SYMBOL_PARTIAL_IDENTIFIER, TERMINAL_LETTER, any, SYMBOL_IDENTIFIER);
+	lr1_add_production_rule(0, SYMBOL_PARTIAL_IDENTIFIER, any, SYMBOL_IDENTIFIER);
+	lr1_add_production_rule(0, SYMBOL_PARTIAL_IDENTIFIER, TERMINAL_LETTER, TERMINAL_NONE);
+	// on replacement, SYMBOL_IDENTIFIER is looked up and replaced by disambiguate
+
 // TYPES
     // the implied word after undefined is identifier
     lr1_add_production_rule(SYMBOL_TYPENAME, SYMBOL_MODIFIED_UNDEFINED_LIST, TERMINAL_END_STATEMENT, SYMBOL_DECLARATION); 
@@ -95,10 +146,15 @@ void write_grammar(void) {
         
     lr1_add_production_rule(SYMBOL_MODIFIED_UNDEFINED_LIST, TERMINAL_COMMA, any, SYMBOL_PARTIAL_MODIFIED_UNDEFINED_LIST); 
     lr1_add_production_rule(SYMBOL_PARTIAL_MODIFIED_UNDEFINED_LIST, SYMBOL_MODIFIED_UNDEFINED, any, SYMBOL_MODIFIED_UNDEFINED_LIST);
+	lr1_add_production_rule(0, SYMBOL_MODIFIED_UNDEFINED, any, SYMBOL_MODIFIED_UNDEFINED_LIST);
 
     lr1_add_production_rule(SYMBOL_MODIFIED_UNDEFINED, TERMINAL_OPEN_BRACKET, any, SYMBOL_MODIFIED_UNDEFINED_SUBSCRIPT);
     lr1_add_production_rule(SYMBOL_MODIFIED_UNDEFINED_SUBSCRIPT, TERMINAL_CLOSE_BRACKET, any, SYMBOL_MODIFIED_UNDEFINED);
     lr1_add_production_rule(SYMBOL_MODIFIED_UNDEFINED_SUBSCRIPT, SYMBOL_EXPRESSION, TERMINAL_CLOSE_BRACKET, SYMBOL_MODIFIED_UNDEFINED_SUBSCRIPT);
+
+	lr1_add_production_rule(0, SYMBOL_UNKNOWN_IDENTIFIER, any, SYMBOL_MODIFIED_UNDEFINED);
+	lr1_add_production_rule(TERMINAL_STAR, SYMBOL_MODIFIED_UNDEFINED, any, SYMBOL_MODIFIED_UNDEFINED);
+	
 
 // LITERALS
     lr1_add_production_rule(0, TERMINAL_NUMBER, any, SYMBOL_PARTIAL_INT_LITERAL);
