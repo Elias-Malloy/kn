@@ -25,7 +25,7 @@ struct M24_Area {
 char* node_name[256] = {
     "0", "++", "--", ".", "->", "(", "[","{", ")", "]", "}", "+", "-", "~", "!", "*", "&", "/", "%", "<<", ">>",
     "<", "<=", ">", ">=", "==", "!=", "^", "|", "&&", "||", "=", ",", ";", "N", "L", "\'", "\"", "I",
-    "S+", "S", "E", "D", "Pident", "Uident", "Var", "C", "T", "Um", "Um[", "UmL", "PUml", "Pint", "Pfloat", "Pstring", "Pchar", "Pdma", "Pima",
+    "S+", "S", "E", "D", "I", "Pident", "Uident", "Var", "C", "T", "Um", "Um[", "UmL", "PUml", "Pint", "Pfloat", "Pstring", "Pchar", "Pdma", "Pima",
     "Pcall", "Psubscript", "Pcast", "cast",
     "Pmdm", "Paddsub", "Pshift", "Pcmp", "Pcmpeq", "Pband", "Pbxor", "Pbor", "Pland", "Plor", "Passign", "P,"
 };
