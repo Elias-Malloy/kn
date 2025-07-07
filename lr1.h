@@ -38,7 +38,7 @@ definitions and identifiers in context and manually adjusting replacements.
 returns a value less than 0 to indicate failure
 */
 #ifdef LR1_AMBIGUOUS
-static void lr1_disambiguate(lr_tree_node *node);
+static void lr1_disambiguate(lr_tree_node *node, lr_tree_node *root);
 #endif
 
 
@@ -116,7 +116,7 @@ lr_tree_node *lr1_parse_terminals(unsigned char *terminals, unsigned long len) {
 //        printf("%s %s (%s) -> \n", node_name[previous], node_name[current], node_name[lookahead]);
 //        lr_tree_print(node);
 #ifdef LR1_AMBIGUOUS
-        lr1_disambiguate(node);
+        lr1_disambiguate(node, stack[2]);
 #endif
     }
     if (top == 3) return stack[2];
