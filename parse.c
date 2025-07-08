@@ -24,7 +24,7 @@ char* src_code;
 static void lr1_disambiguate(lr_tree_node *node, lr_tree_node *root) {
     unsigned char type, ltype, *name;
     unsigned long long i, n, scale, len;
-    lr_tree_node* subnode, root, auxnode; root = new arg???
+    lr_tree_node* subnode, *auxnode;
 	syntax_tree_variable *var;
 	data_type *datatype;
     char identifier[MAX_IDENTIFIER_LEN];
@@ -53,11 +53,11 @@ static void lr1_disambiguate(lr_tree_node *node, lr_tree_node *root) {
 				do {
 					type = lr_tree_node_type(subnode);
 					if (type != SYMBOL_STATEMENTS) {
-						node->type = SYMBOL_UNDEFINED_IDENTIFIER;
+						node->type = SYMBOL_UNKNOWN_IDENTIFIER;
 						break;
 					}
-					auxnode = symbol->right->right;
-					if (auxnode == SYMBOL_DECLARATION) {
+					auxnode = subnode->right->right;
+					if (auxnode->type == SYMBOL_DECLARATION) {
 						auxnode = auxnode->right;
 						do {
 							var = auxnode->right;
@@ -69,7 +69,7 @@ static void lr1_disambiguate(lr_tree_node *node, lr_tree_node *root) {
 					}
 					subnode = subnode->left;
 				} while (1);
-				node->type = SYMBOL_UNDEFINED_IDENTIFIER;
+				node->type = SYMBOL_UNKNOWN_IDENTIFIER;
 			}
 			break;
         case SYMBOL_CONSTANT:
