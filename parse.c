@@ -247,7 +247,6 @@ void write_grammar(void) {
         bit_array256_not(operator_set);
         bit_array256_and(not_higher_precedence_operator, operator_set);
     }
-    //&lr1_grammar[]
 }
 
 void debug_grammar(void) {
@@ -255,7 +254,6 @@ void debug_grammar(void) {
     unsigned long long lookahead_set[SC];
     unsigned char lookahead_bitstring[TC + 1];
     lookahead_bitstring[TC] = 0;
-    // 12
     for (i = 0; i < SC; i++) {
         for (j = 0; j < SC; j++) {
             for (k = 0; k < SC; k++) {

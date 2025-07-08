@@ -27,14 +27,9 @@ bool typecheck_expression(typed_syntax_tree *expr) {
 	complete_data_type *complete_type;
 	
 	ltype = expr->left->type;
-	// prepass introduce cast to equate to dominant type
-	// mark dominant type/category
-	// now each op as n not n2 cases
-	// requires standard rules for type heirarchy which do exist
 	switch (ltype) {
 		case SYMBOL_EXPRESSION:
 			// unary post
-			// ugh ordering FUCK FUCK FUCK, when/where does the add go????
 			switch(expr->right->type) {
 				// all the suffix ops
 			}

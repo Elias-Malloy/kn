@@ -41,8 +41,6 @@ returns a value less than 0 to indicate failure
 static void lr1_disambiguate(lr_tree_node *node, lr_tree_node *root);
 #endif
 
-
-
 // implementations
 
 static void lr1_add_production_rule(int previous, int current, int lookahead, unsigned char replacement)
@@ -69,8 +67,6 @@ static void lr1_add_production_rule_set(bit_array256 previous, bit_array256 curr
     for (bit_array256_copy(lookahead_to_add, lookahead), k = 0; (k = bit_array256_tzcnt(lookahead_to_add)) < TC; bit_array256_unset(lookahead_to_add, k))
         lr1_grammar[i][j][k] = replacement; 
 }
-
-// printf("%s %s (%s) -> %s\n", node_name[i], node_name[j], node_name[k], node_name[replacement]);
 
 #define PARSE_STACK_SIZE 512
 lr_tree_node *lr1_parse_terminals(unsigned char *terminals, unsigned long len) {
