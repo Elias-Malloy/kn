@@ -5,7 +5,7 @@
 
 typed_syntax_tree *typecheck(syntax_tree *tree) {
 	unsigned char type, ltype, rtype, valid_typing, operator;
-	syntax_tree *node, stmt;
+	syntax_tree *node, *stmt;
 	
 	type = lr_tree_node_type(tree);
 	if (type != SYMBOL_STATEMENTS) return NULL;
@@ -23,7 +23,7 @@ typed_syntax_tree *typecheck(syntax_tree *tree) {
 
 bool typecheck_expression(typed_syntax_tree *expr) {
 	unsigned char type, ltype, valid_typing;
-	typed_syntax_tree *node, lhs, rhs, principal_node, auxilary_node;
+	typed_syntax_tree *node, *lhs, *rhs, *principal_node, *auxilary_node;
 	complete_data_type *complete_type;
 	
 	ltype = expr->left->type;
