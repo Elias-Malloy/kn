@@ -15,7 +15,7 @@ static inline void bit_array_copy(bit_array *dst, bit_array *src) {
     uint64_t i, len;
 	len = (dst->length >> 6) + 1;
 	for (i = 0; i < len; i++) {
-		dst->bits[i] = src[i];
+		dst->bits[i] = src->bits[i];
 	}
 }
 
@@ -35,10 +35,10 @@ static inline void bit_array_set(bit_array *a, uint64_t i) {
 static inline void bit_array_unset(bit_array *a, uint64_t i) {
     a->bits[i>>6] &= ~(1ull<<(i&63));
 }
-static inline void bit_array256_flip(bit_array *a, uint64_t i) {
+static inline void bit_array_flip(bit_array *a, uint64_t i) {
     a->bits[i>>6] ^= 1ull<<(i&63);
 }
-static inline void bit_array256_not(bit_array256 a) {
+static inline void bit_array_not(bit_array *a) {
     uint64_t i, len;
 	len = (a->length >> 6) + 1;
 	for (i = 0; i < len; i++) {
@@ -52,14 +52,14 @@ static inline void bit_array_and(bit_array *a, bit_array *b) {
 		a->bits[i] &= b->bits[i];
 	}
 }
-static inline void bit_array256_or(bit_array *a, bit_array *b) {
+static inline void bit_array_or(bit_array *a, bit_array *b) {
     uint64_t i, len;
 	len = (a->length >> 6) + 1;
 	for (i = 0; i < len; i++) {
 		a->bits[i] |= b->bits[i];
 	}
 }
-static void bit_array256_xor(bit_array *a, bit_array *b) {
+static void bit_array_xor(bit_array *a, bit_array *b) {
     uint64_t i, len;
 	len = (a->length >> 6) + 1;
 	for (i = 0; i < len; i++) {
@@ -70,7 +70,7 @@ static unsigned long bit_array_tzcnt(bit_array *a) {
     uint64_t i, len, trailing_zeros;
 	len = a->length;
 #ifdef __BMI__
-	i = 0
+	i = 0;
 	do {
 		trailing_zeros = _tzcnt_u64(a->bits[i >> 6]);
 	} while (trailing_zeros != 64 && (i += trailing_zeros) < len);
@@ -151,5 +151,3 @@ static unsigned long bit_array256_tzcnt(bit_array256 a) {
 #endif
     return i;
 }
-
-#endif
