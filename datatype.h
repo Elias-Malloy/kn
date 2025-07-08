@@ -15,7 +15,7 @@ enum primitive_type {
 	PRIM_FLOAT32,
 	PRIM_FLOAT64,
 	PRIM_STRUCT,
-}
+};
 
 enum typed_tree_node_type {
 	EXPR_ASSIGN,
@@ -57,7 +57,7 @@ enum typed_tree_node_type {
 	EXPR_CAST_UINT8_TO_UINT32,
 	EXPR_CAST_INT8_TO_INT16,
 	EXPR_CAST_UINT8_TO_UINT16,
-	EXPR_CAST_INT16_TO_INT64
+	EXPR_CAST_INT16_TO_INT64,
 	EXPR_CAST_UINT16_TO_UINT64,
 	EXPR_CAST_INT16_TO_INT32,
 	EXPR_CAST_UINT16_TO_UINT32,
@@ -73,7 +73,7 @@ enum typed_tree_node_type {
 	EXPR_CAST_INT32_TO_FLOAT64, // cvtsi2sd
 	EXPR_CAST_INT64_TO_FLOAT32, // cvtsi2ss
 	EXPR_CAST_INT32_TO_FLOAT32, // cvtsi2ss
-}
+};
 
 typedef struct typed_syntax_tree {
 	uint16_t type;
@@ -100,7 +100,7 @@ typedef struct syntax_tree_variable {
 	char *name;
 	struct {
 		uint64_t field_count;
-		syntax_tree_variable *fields;
+		struct syntax_tree_variable *fields;
 	} *type_ext;
 } syntax_tree_variable;
 
