@@ -1,4 +1,4 @@
-#include "grammar.h"
+#include "parse.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,7 +13,6 @@
 // if re-enabled, integer constants will be evaluated
 
 #include "lr1.h"
-#include "datatype.h"
 
 static void string_to_terminals(char* str, unsigned char* terminals, unsigned long len);
 
@@ -108,16 +107,17 @@ static void lr1_disambiguate(lr_tree_node *node, lr_tree_node *root) {
     }
 }
 
-lr_tree_node* parse_string(char* str) {
+syntax_tree* parse_string(char* str) {
     unsigned char* terminals;
     unsigned long len;
+	syntax_tree *parse_tree;
     src_code = str;
     len = strlen(str);
     terminals = malloc(len+1);
     if (terminals == NULL) return NULL;
     terminals[len] = 0;
     string_to_terminals(str, terminals, len);
-    lr_tree_node* parse_tree = lr1_parse_terminals(terminals, len + 1);
+    parse_tree = lr1_parse_terminals(terminals, len + 1);
     free(terminals);
     lr_tree_print(parse_tree);
     return parse_tree;

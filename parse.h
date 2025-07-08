@@ -2,7 +2,8 @@
 
 #include "lr_tree.h"
 #include "grammar.h"
+#include "datatype.h"
 
 void write_grammar(void);
 void debug_grammar(void);
-lr_tree_node *parse_string(char *str);
+syntax_tree *parse_string(char *str);
