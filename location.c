@@ -1,11 +1,10 @@
-#include "location.h"
+//#include "location.h"
+#include "bitarray.h"
 
 typedef struct graph {
 	uint64_t vertex_count;
 	uint8_t edge_weights[8];
 } graph;
-
-
 
 typedef struct liveness_dataflow_sets {
 	uint64_t vertex_count;
@@ -33,4 +32,11 @@ graph *create_interference_graph_from_tree(typed_syntax_tree *tree) {
 	// functions?
 	
 	//
+	graph *interference_graph;
+	
+	
+	
+	interference_graph = NULL;
+	
+	return interference_graph;
 }
