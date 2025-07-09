@@ -16,41 +16,58 @@ enum primitive_type {
 	PRIM_FLOAT64,
 	PRIM_STRUCT,
 };
+/*
+STMT_FOR
+	initial     EXPR/DECL
+    condition   EXPR
+	increment   EXPR
+	body		STMT_BLOCK
+STMT_WHILE
+	condition   EXPR
+	body		STMT_BLOCK
+STMT_IF
+	condition	EXPR
+	body		STMT_BLOCK
+	else-body	STMT_BLOCK
+STMT_RETURN
+	value       EXPR
 
-enum typed_tree_node_type {
+*/
+enum typed_syntax_tree_node_type {
+	PROGRAM,
+	FUNCTION,
+	CONSTANT,
+	VARIABLE,
+	DEFINITION,
+	STATEMENT,
+	STATEMENT_LIST,
+	STATEMENT_PAIR,
+	STMT_IF,
+	STMT_FOR,
+	STMT_WHILE,
+	STMT_RETURN,
+	EXPR_MUL,
+	EXPR_DIV,
+	EXPR_MOD,
+	EXPR_ADD,
+	EXPR_SUB,
+	EXPR_LSHIFT,
+	EXPR_RSHIFT,
+	EXPR_CMP_LESS,
+	EXPR_CMP_LESS_EQUAL,
+	EXPR_CMP_GREATER,
+	EXPR_CMP_GREATER_EQUAL,
+	EXPR_CMP_EQUAL_EQUAL,
+	EXPR_CMP_NOT_EQUAL,
+	EXPR_BIT_AND,
+	EXPR_BIT_XOR,
+	EXPR_LOGICAL_AND,
+	EXPR_LOGICAL_OR,
 	EXPR_ASSIGN,
-	EXPR_ADD_INT64,
-	EXPR_ADD_INT32,
-	EXPR_ADD_INT16,
-	EXPR_ADD_INT8,
-	EXPR_ADD_FLOAT64,
-	EXPR_ADD_FLOAT32,
-	EXPR_SUB_INT64,
-	EXPR_SUB_INT32,
-	EXPR_SUB_INT16,
-	EXPR_SUB_INT8,
-	EXPR_SUB_FLOAT64,
-	EXPR_SUB_FLOAT32,
-	EXPR_MUL_INT64,   // imul
-	EXPR_MUL_UINT64,  // mul
-	EXPR_MUL_INT32,
-	EXPR_MUL_UINT32,
-	EXPR_MUL_INT16,
-	EXPR_MUL_UINT16,
-	EXPR_MUL_INT8,
-	EXPR_MUL_UINT8,
-	EXPR_MUL_FLOAT64, // mulsd
-	EXPR_MUL_FLOAT32, // mulss
-	EXPR_DIV_INT64,
-	EXPR_DIV_UINT64,
-	EXPR_DIV_INT32,
-	EXPR_DIV_UINT32,
-	EXPR_DIV_INT16,
-	EXPR_DIV_UINT16,
-	EXPR_DIV_INT8,
-	EXPR_DIV_UINT8,
-	EXPR_DIV_FLOAT64, // divsd xmm, xmm/m64 (lhs must be reg)
-	EXPR_DIV_FLOAT32, // divss
+	EXPR_SEQUENCE,
+
+}
+/*
 	EXPR_CAST_INT8_TO_INT64, // movsx
 	EXPR_CAST_UINT8_TO_UINT64, // movzx
 	EXPR_CAST_INT8_TO_INT32,
@@ -73,7 +90,7 @@ enum typed_tree_node_type {
 	EXPR_CAST_INT32_TO_FLOAT64, // cvtsi2sd
 	EXPR_CAST_INT64_TO_FLOAT32, // cvtsi2ss
 	EXPR_CAST_INT32_TO_FLOAT32, // cvtsi2ss
-};
+*/
 
 typedef struct typed_syntax_tree {
 	uint16_t type;
@@ -104,9 +121,19 @@ typedef struct syntax_tree_variable {
 	} *type_ext;
 } syntax_tree_variable;
 
-typedef struct data_type {
-	unsigned char base_type;
+typedef struct base_data_type {
+	unsigned char primitive_type;
 	unsigned char indirection;
-} data_type;
+} base_data_type;
+
+typedef struct complete_data_type {
+	unint16_t pad0;
+	base_data_type base_type;
+	uint32_t field_count;
+	char **field_names;
+	struct complete_data_type *field_types;
+} complete_data_type;
 
 typed_syntax_tree *typecheck(syntax_tree *tree);
+void syntax_tree_free(syntax_tree *tree);
+void typed_syntax_tree_free(typed_syntax_tree *tree);
