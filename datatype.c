@@ -1,7 +1,6 @@
 #include "datatype.h"
 #include "grammar.h"
 #include "lr_tree.h"
-#include <stdbool.h>
 
 typed_syntax_tree *typecheck(syntax_tree *tree) {
 	unsigned char type, ltype, rtype, valid_typing, operator;
@@ -203,11 +202,11 @@ accept_any:
 	return true;
 }
 
-bool typecheck_statement(syntax_tree *stmt) {
-	unsigned char ltype, rtype;
-	
-	ltype = stmt->left->type;
-	if (ltype == SYMBOL_EXPRESSION) {
-		
-	}
+void syntax_tree_free(syntax_tree *tree) {
+	// TODO reimplement with some checks on metadata
+	lr_tree_free(tree);
+}
+void typed_syntax_tree_free(typed_syntax_tree *tree) {
+	// TODO reimplement with custom checks for metadata
+	lr_tree_free(tree);
 }
