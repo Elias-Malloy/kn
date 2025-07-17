@@ -15,4 +15,4 @@ graph *create_graph(uint64_t vertex_count);
 add_edge_to_graph(graph *g, uint64_t v1, uint64_t v2, uint8_t weight);
 add_edge_to_undirected_graph(graph *g, uint64_t v1, uint64_t v2, uint8_t weight);
 
-graph *create_interference_graph_from_tree(typed_syntax_tree *tree);
+graph *create_interference_graph(typed_syntax_tree *tree, compile_context *ctx);
